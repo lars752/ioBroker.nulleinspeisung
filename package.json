@@ -1,0 +1,43 @@
+{
+  "name": "iobroker.nulleinspeisung",
+  "version": "0.1.0",
+  "description": "Nulleinspeisung für mehrere Zonen an einem Akku (BMS-Budget, SoC-Schutz, Vorsteuerung für getaktete Lasten) über die Sollwerte der Wechselrichter",
+  "author": "Lars",
+  "license": "MIT",
+  "homepage": "https://github.com/lars752/ioBroker.nulleinspeisung",
+  "keywords": [
+    "ioBroker",
+    "nulleinspeisung",
+    "zero-feed-in",
+    "pv",
+    "battery",
+    "inverter",
+    "ecoflow",
+    "shelly"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lars752/ioBroker.nulleinspeisung.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.2.3"
+  },
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "lib/",
+    "main.js",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/lars752/ioBroker.nulleinspeisung/issues"
+  },
+  "readmeFilename": "README.md"
+}

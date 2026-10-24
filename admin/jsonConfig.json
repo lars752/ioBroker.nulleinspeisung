@@ -1,0 +1,592 @@
+{
+  "type": "tabs",
+  "i18n": false,
+  "items": {
+    "zones": {
+      "type": "panel",
+      "label": {
+        "de": "Zonen",
+        "en": "Zones"
+      },
+      "items": {
+        "_hint": {
+          "type": "staticText",
+          "text": {
+            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts); je Wechselrichter gibt es danach die Datenpunkte Aktiv und MaxW.",
+            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts); afterwards each inverter has the data points Aktiv and MaxW."
+          },
+          "newLine": true,
+          "sm": 12
+        },
+        "dryRun": {
+          "type": "checkbox",
+          "label": {
+            "de": "Testlauf (nur protokollieren, keine Sollwerte schreiben)",
+            "en": "Dry run (log only, do not write setpoints)"
+          },
+          "sm": 12,
+          "md": 12,
+          "newLine": true
+        },
+        "zones": {
+          "type": "table",
+          "label": {
+            "de": "Zonen",
+            "en": "Zones"
+          },
+          "newLine": true,
+          "sm": 12,
+          "items": [
+            {
+              "type": "text",
+              "attr": "name",
+              "title": {
+                "de": "Name",
+                "en": "Name"
+              },
+              "width": "14%",
+              "sort": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "active",
+              "title": {
+                "de": "Aktiv",
+                "en": "Active"
+              },
+              "width": "7%",
+              "default": false
+            },
+            {
+              "type": "text",
+              "attr": "meterId",
+              "title": {
+                "de": "Zähler-Datenpunkt (Bezug +, Einspeisung −)",
+                "en": "Meter data point (import +, feed-in −)"
+              },
+              "width": "34%"
+            },
+            {
+              "type": "text",
+              "attr": "groupPath",
+              "title": {
+                "de": "Wechselrichter-Gruppe (Pfad)",
+                "en": "Inverter group (path)"
+              },
+              "width": "34%"
+            },
+            {
+              "type": "number",
+              "attr": "maxW",
+              "title": {
+                "de": "Max. Leistung (W)",
+                "en": "Max. power (W)"
+              },
+              "width": "11%",
+              "default": 2000
+            }
+          ]
+        }
+      }
+    },
+    "bms": {
+      "type": "panel",
+      "label": {
+        "de": "BMS und Akkuschutz",
+        "en": "BMS and battery protection"
+      },
+      "items": {
+        "socId": {
+          "type": "text",
+          "label": {
+            "de": "Datenpunkt Akku-SoC (%)",
+            "en": "Battery SoC data point (%)"
+          },
+          "sm": 12,
+          "md": 6,
+          "help": {
+            "de": "z. B. growatt-bms.0.SoC",
+            "en": "e.g. growatt-bms.0.SoC"
+          },
+          "newLine": true
+        },
+        "totalBmsLimitW": {
+          "type": "number",
+          "label": {
+            "de": "Gesamtlimit aller Zonen (W)",
+            "en": "Total limit of all zones (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Maximale Entladeleistung des BMS; wird fair auf die Zonen verteilt",
+            "en": "Maximum BMS discharge power; shared fairly between zones"
+          },
+          "min": 0,
+          "max": 1000000
+        },
+        "socCutoffPercent": {
+          "type": "number",
+          "label": {
+            "de": "Abschaltung bei SoC ≤ (%)",
+            "en": "Shut off at SoC ≤ (%)"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true,
+          "min": 0,
+          "max": 100
+        },
+        "socRestartPercent": {
+          "type": "number",
+          "label": {
+            "de": "Wiederfreigabe ab SoC ≥ (%)",
+            "en": "Release at SoC ≥ (%)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Hysterese; nie unter der Abschaltgrenze",
+            "en": "Hysteresis; never below the cut-off"
+          },
+          "min": 0,
+          "max": 100
+        },
+        "checkBmsOnline": {
+          "type": "checkbox",
+          "label": {
+            "de": "BMS-Online prüfen",
+            "en": "Check BMS online"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true
+        },
+        "bmsOnlineId": {
+          "type": "text",
+          "label": {
+            "de": "Datenpunkt BMS online",
+            "en": "BMS online data point"
+          },
+          "sm": 12,
+          "md": 9,
+          "help": {
+            "de": "z. B. growatt-bms.0.Online",
+            "en": "e.g. growatt-bms.0.Online"
+          }
+        },
+        "checkBmsDischargeLimit": {
+          "type": "checkbox",
+          "label": {
+            "de": "BMS-Entladelimit prüfen",
+            "en": "Check BMS discharge limit"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true
+        },
+        "bmsDischargeLimitId": {
+          "type": "text",
+          "label": {
+            "de": "Datenpunkt Entladestrom-Limit (A)",
+            "en": "Discharge current limit data point (A)"
+          },
+          "sm": 12,
+          "md": 6,
+          "help": {
+            "de": "z. B. growatt-bms.0.Discharge_Current_Limit",
+            "en": "e.g. growatt-bms.0.Discharge_Current_Limit"
+          }
+        },
+        "minBmsDischargeLimitA": {
+          "type": "number",
+          "label": {
+            "de": "Mindest-Entladelimit (A)",
+            "en": "Minimum discharge limit (A)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Darunter wird nicht geregelt",
+            "en": "Below this value no regulation"
+          },
+          "min": 0,
+          "max": 10000
+        },
+        "checkBmsProtection": {
+          "type": "checkbox",
+          "label": {
+            "de": "BMS-Schutzmeldung prüfen",
+            "en": "Check BMS protection flag"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true
+        },
+        "bmsProtectionId": {
+          "type": "text",
+          "label": {
+            "de": "Datenpunkt Schutzmeldung",
+            "en": "Protection flag data point"
+          },
+          "sm": 12,
+          "md": 9,
+          "help": {
+            "de": "z. B. growatt-bms.0.Any_Protection",
+            "en": "e.g. growatt-bms.0.Any_Protection"
+          }
+        }
+      }
+    },
+    "wr": {
+      "type": "panel",
+      "label": {
+        "de": "Wechselrichter",
+        "en": "Inverters"
+      },
+      "items": {
+        "wrDefaultMaxW": {
+          "type": "number",
+          "label": {
+            "de": "Standard-Maximalleistung je Wechselrichter (W)",
+            "en": "Default maximum power per inverter (W)"
+          },
+          "sm": 12,
+          "md": 4,
+          "help": {
+            "de": "Überschreibbar je Wechselrichter über den Datenpunkt MaxW",
+            "en": "Can be overridden per inverter via data point MaxW"
+          },
+          "newLine": true,
+          "min": 1,
+          "max": 100000
+        },
+        "wrActualScale": {
+          "type": "number",
+          "label": {
+            "de": "Skalierung Istwert → Watt",
+            "en": "Scale actual value → watt"
+          },
+          "sm": 12,
+          "md": 4,
+          "min": 0.0001,
+          "max": 1000000
+        },
+        "wrSwitchDefault": {
+          "type": "checkbox",
+          "label": {
+            "de": "Neue Wechselrichter standardmäßig beteiligen",
+            "en": "Include new inverters by default"
+          },
+          "sm": 12,
+          "md": 4
+        },
+        "rescanS": {
+          "type": "number",
+          "label": {
+            "de": "Wechselrichter neu erkennen alle (s)",
+            "en": "Re-detect inverters every (s)"
+          },
+          "sm": 12,
+          "md": 4,
+          "help": {
+            "de": "Änderungen an der Liste setzen die Zone sicher auf 0 W",
+            "en": "Changes to the list safely reset the zone to 0 W"
+          },
+          "newLine": true,
+          "min": 5,
+          "max": 86400
+        },
+        "zeroOnStop": {
+          "type": "checkbox",
+          "label": {
+            "de": "Beim Stoppen des Adapters alle Wechselrichter auf 0 W setzen",
+            "en": "Set all inverters to 0 W when the adapter stops"
+          },
+          "sm": 12,
+          "md": 8
+        }
+      }
+    },
+    "reg": {
+      "type": "panel",
+      "label": {
+        "de": "Regelung",
+        "en": "Control"
+      },
+      "items": {
+        "deadBandWatts": {
+          "type": "number",
+          "label": {
+            "de": "Totband (W)",
+            "en": "Dead band (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true,
+          "min": 0,
+          "max": 10000
+        },
+        "regulatorIntervalMs": {
+          "type": "number",
+          "label": {
+            "de": "Regeltakt (ms)",
+            "en": "Control interval (ms)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 500,
+          "max": 60000
+        },
+        "maxMeterAgeS": {
+          "type": "number",
+          "label": {
+            "de": "Max. Alter des Zählerwerts (s)",
+            "en": "Max. age of meter value (s)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Ältere Werte sperren die Zone (0 W)",
+            "en": "Older values block the zone (0 W)"
+          },
+          "min": 1,
+          "max": 3600
+        },
+        "latencyToleranceW": {
+          "type": "number",
+          "label": {
+            "de": "Latenz-Toleranz (W)",
+            "en": "Latency tolerance (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Nach einem Sollwert wird gewartet, bis der Istwert so nah am Ziel ist",
+            "en": "After a setpoint the adapter waits until the actual value is this close to the target"
+          },
+          "newLine": true,
+          "min": 0,
+          "max": 100000
+        },
+        "maxLatencyTimeoutS": {
+          "type": "number",
+          "label": {
+            "de": "Max. Wartezeit auf Rückmeldung (s)",
+            "en": "Max. wait for feedback (s)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 1,
+          "max": 3600
+        },
+        "regulationLogLevel": {
+          "type": "select",
+          "label": {
+            "de": "Log-Stufe der Regelzeilen",
+            "en": "Log level of control lines"
+          },
+          "options": [
+            {
+              "label": "debug",
+              "value": "debug"
+            },
+            {
+              "label": "info",
+              "value": "info"
+            }
+          ],
+          "sm": 12,
+          "md": 3
+        }
+      }
+    },
+    "ff": {
+      "type": "panel",
+      "label": {
+        "de": "Vorsteuerung",
+        "en": "Feed-forward"
+      },
+      "items": {
+        "feedForwardEnabled": {
+          "type": "checkbox",
+          "label": {
+            "de": "Vorsteuerung für getaktete Großlasten aktivieren",
+            "en": "Enable feed-forward for pulsed loads"
+          },
+          "sm": 12,
+          "md": 12,
+          "newLine": true
+        },
+        "peakDetectionThresholdW": {
+          "type": "number",
+          "label": {
+            "de": "Sprung ab (W)",
+            "en": "Step from (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Muss kleiner als der Maximalsprung sein",
+            "en": "Must be below the maximum step"
+          },
+          "newLine": true,
+          "min": 1,
+          "max": 100000
+        },
+        "peakMaxW": {
+          "type": "number",
+          "label": {
+            "de": "Maximaler Sprung (W)",
+            "en": "Maximum step (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Größere Sprünge sind keine getaktete Last",
+            "en": "Larger steps are not pulsed loads"
+          },
+          "min": 1,
+          "max": 100000
+        },
+        "peakWindowMs": {
+          "type": "number",
+          "label": {
+            "de": "Zeitfenster der Erkennung (ms)",
+            "en": "Detection window (ms)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 100,
+          "max": 20000
+        },
+        "estimatedDutyCycle": {
+          "type": "number",
+          "label": {
+            "de": "Geschätzter Einschaltanteil (0–1)",
+            "en": "Estimated duty cycle (0–1)"
+          },
+          "sm": 12,
+          "md": 3,
+          "help": {
+            "de": "Anteil des Sprungs, der als Dauerlast erwartet wird",
+            "en": "Share of the step expected as continuous load"
+          },
+          "newLine": true,
+          "min": 0,
+          "max": 1
+        },
+        "tactPauseTimeoutMs": {
+          "type": "number",
+          "label": {
+            "de": "Ende nach Pause von (ms)",
+            "en": "End after pause of (ms)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 500,
+          "max": 600000
+        },
+        "feedForwardMaxDurationS": {
+          "type": "number",
+          "label": {
+            "de": "Maximaldauer (s)",
+            "en": "Maximum duration (s)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 1,
+          "max": 86400
+        },
+        "feedForwardAbortWindowS": {
+          "type": "number",
+          "label": {
+            "de": "Abbruch-Prüffenster (s)",
+            "en": "Abort check window (s)"
+          },
+          "sm": 12,
+          "md": 3,
+          "newLine": true,
+          "min": 1,
+          "max": 20
+        },
+        "feedForwardAbortExportW": {
+          "type": "number",
+          "label": {
+            "de": "Abbruch bei mittlerer Einspeisung über (W)",
+            "en": "Abort at mean feed-in above (W)"
+          },
+          "sm": 12,
+          "md": 3,
+          "min": 0,
+          "max": 100000
+        }
+      }
+    },
+    "backup": {
+      "type": "panel",
+      "label": {
+        "de": "Import / Export",
+        "en": "Import / Export"
+      },
+      "items": {
+        "_info": {
+          "type": "staticText",
+          "text": {
+            "de": "Die Konfiguration lässt sich als JSON sichern, auf eine andere Instanz übertragen oder wiederherstellen. Die Instanz muss dafür laufen.",
+            "en": "The configuration can be saved as JSON, transferred to another instance or restored. The instance must be running."
+          },
+          "newLine": true,
+          "sm": 12
+        },
+        "_exportBtn": {
+          "type": "sendTo",
+          "command": "exportConfig",
+          "jsonData": "{\"config\": ${JSON.stringify(data)}}",
+          "useNative": true,
+          "variant": "outlined",
+          "label": {
+            "de": "Konfiguration als JSON exportieren",
+            "en": "Export configuration as JSON"
+          },
+          "tooltip": {
+            "de": "Schreibt die aktuelle Konfiguration (auch ungespeicherte Änderungen) in das Textfeld",
+            "en": "Writes the current configuration (including unsaved changes) into the text field"
+          },
+          "newLine": true,
+          "sm": 12,
+          "md": 6
+        },
+        "_importBtn": {
+          "type": "sendTo",
+          "command": "importConfig",
+          "jsonData": "{\"json\": ${JSON.stringify(data.configJson || \"\")}}",
+          "useNative": true,
+          "variant": "contained",
+          "label": {
+            "de": "JSON aus dem Textfeld importieren",
+            "en": "Import JSON from the text field"
+          },
+          "tooltip": {
+            "de": "Übernimmt die Konfiguration in das Formular; danach „Speichern und schließen“ drücken",
+            "en": "Applies the configuration to the form; then press “Save and close”"
+          },
+          "sm": 12,
+          "md": 6
+        },
+        "configJson": {
+          "type": "text",
+          "label": {
+            "de": "Konfiguration (JSON): zum Sichern kopieren, zum Import einfügen",
+            "en": "Configuration (JSON): copy to back up, paste to import"
+          },
+          "minRows": 12,
+          "maxRows": 28,
+          "copyToClipboard": true,
+          "newLine": true,
+          "sm": 12
+        }
+      }
+    }
+  }
+}

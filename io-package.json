@@ -1,0 +1,158 @@
+{
+  "common": {
+    "name": "nulleinspeisung",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "Initial release: zero feed-in for several zones sharing one battery, SoC protection, feed-forward, JSON import/export",
+        "de": "Erstveröffentlichung: Nulleinspeisung für mehrere Zonen an einem Akku, SoC-Schutz, Vorsteuerung, JSON-Import/-Export"
+      }
+    },
+    "titleLang": {
+      "en": "Zero feed-in",
+      "de": "Nulleinspeisung"
+    },
+    "desc": {
+      "en": "Regulates inverter setpoints so the grid meter of each zone reads zero; shared battery budget, SoC protection and feed-forward for pulsed loads",
+      "de": "Regelt die Wechselrichter-Sollwerte so, dass der Zähler jeder Zone null anzeigt; gemeinsames Akku-Budget, SoC-Schutz und Vorsteuerung für getaktete Lasten"
+    },
+    "authors": [
+      "Lars"
+    ],
+    "keywords": [
+      "zero feed-in",
+      "pv",
+      "battery",
+      "inverter"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "nulleinspeisung.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/lars752/ioBroker.nulleinspeisung/main/admin/nulleinspeisung.png",
+    "readme": "https://github.com/lars752/ioBroker.nulleinspeisung/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "energy",
+    "compact": false,
+    "connectionType": "local",
+    "dataSource": "push",
+    "messagebox": true,
+    "supportedMessages": {
+      "custom": true
+    },
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.19"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=6.12.2"
+      }
+    ]
+  },
+  "native": {
+    "socId": "growatt-bms.0.SoC",
+    "bmsOnlineId": "growatt-bms.0.Online",
+    "bmsDischargeLimitId": "growatt-bms.0.Discharge_Current_Limit",
+    "bmsProtectionId": "growatt-bms.0.Any_Protection",
+    "checkBmsOnline": true,
+    "checkBmsDischargeLimit": true,
+    "checkBmsProtection": true,
+    "minBmsDischargeLimitA": 1,
+    "socCutoffPercent": 20,
+    "socRestartPercent": 23,
+    "totalBmsLimitW": 3000,
+    "wrSwitchDefault": true,
+    "wrDefaultMaxW": 800,
+    "rescanS": 60,
+    "wrActualScale": 1,
+    "latencyToleranceW": 40,
+    "maxLatencyTimeoutS": 10,
+    "deadBandWatts": 15,
+    "regulatorIntervalMs": 3000,
+    "maxMeterAgeS": 15,
+    "zeroOnStop": true,
+    "regulationLogLevel": "debug",
+    "dryRun": false,
+    "feedForwardEnabled": true,
+    "peakDetectionThresholdW": 1200,
+    "peakMaxW": 2500,
+    "peakWindowMs": 2000,
+    "estimatedDutyCycle": 0.5,
+    "tactPauseTimeoutMs": 3500,
+    "feedForwardMaxDurationS": 180,
+    "feedForwardAbortWindowS": 12,
+    "feedForwardAbortExportW": 250,
+    "zones": [],
+    "configJson": ""
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Regelung läuft (mindestens eine Zone aktiv und nicht gesperrt)",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "Aktiv",
+      "type": "state",
+      "common": {
+        "role": "switch",
+        "name": "Nulleinspeisung aktiv (Hauptschalter; aus = alle Wechselrichter auf 0 W)",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "Gesperrt",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Grund der globalen Sperre (leer = keine)",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "Akku_Gesperrt",
+      "type": "state",
+      "common": {
+        "role": "indicator",
+        "name": "Akkuschutz aktiv (SoC unter Grenze)",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
+}
