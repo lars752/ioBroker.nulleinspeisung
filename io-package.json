@@ -1,11 +1,11 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "news": {
-      "0.1.0": {
-        "en": "Initial release: zero feed-in for several zones sharing one battery, SoC protection, feed-forward, JSON import/export",
-        "de": "Erstveröffentlichung: Nulleinspeisung für mehrere Zonen an einem Akku, SoC-Schutz, Vorsteuerung, JSON-Import/-Export"
+      "1.0.0": {
+        "en": "Initial release",
+        "de": "Erstveröffentlichung"
       }
     },
     "titleLang": {
