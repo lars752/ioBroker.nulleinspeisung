@@ -58,13 +58,12 @@
               "default": false
             },
             {
-              "type": "objectId",
+              "type": "text",
               "attr": "meterId",
               "title": {
                 "de": "Zähler-Datenpunkt (Bezug +, Einspeisung −)",
                 "en": "Meter data point (import +, feed-in −)"
               },
-              "types": ["state"],
               "width": "34%"
             },
             {
@@ -579,8 +578,7 @@
                 "de": "Zone",
                 "en": "Zone"
               },
-              "width": "18%",
-              "readOnly": true
+              "width": "18%"
             },
             {
               "type": "text",
@@ -589,8 +587,7 @@
                 "de": "Wechselrichter",
                 "en": "Inverter"
               },
-              "width": "18%",
-              "readOnly": true
+              "width": "18%"
             },
             {
               "type": "checkbox",
@@ -606,8 +603,8 @@
               "type": "number",
               "attr": "maxW",
               "title": {
-                "de": "Max. Leistung (W, 0 = Standard)",
-                "en": "Max. power (W, 0 = default)"
+                "de": "Max. W (0=Std.)",
+                "en": "Max. W (0=default)"
               },
               "width": "18%",
               "default": 0,
@@ -621,8 +618,7 @@
                 "de": "Sollwert-Datenpunkt",
                 "en": "Setpoint data point"
               },
-              "width": "36%",
-              "readOnly": true
+              "width": "36%"
             }
           ]
         }
