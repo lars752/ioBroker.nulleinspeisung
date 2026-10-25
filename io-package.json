@@ -4,8 +4,8 @@
     "version": "1.0.2",
     "news": {
       "1.0.2": {
-        "en": "New: per-inverter latency learning – each inverter now has its own response-time model (10 W buckets, EWMA); zone lock duration is the maximum of all per-inverter estimates",
-        "de": "Neu: WR-individuelle Latenzmessung – jeder Wechselrichter hat ein eigenes Ansteuerungszeit-Modell (10-W-Schritte, EWMA); Zonensperre = Maximum aller WR-Schätzungen"
+        "en": "BMS data point fields now use object picker; inverter discovery updated to Meter<x>.TotalActivePower; default paths updated to bms.* subfolder",
+        "de": "BMS-Datenpunktfelder jetzt mit Object-Picker; Wechselrichter-Erkennung auf Meter<x>.TotalActivePower umgestellt; Standard-Pfade auf bms.*-Unterordner aktualisiert"
       },
       "1.0.1": {
         "en": "New: adaptive latency learning – inverter response times are measured per 10 W step bucket and used to dynamically adjust the latency lock timeout",

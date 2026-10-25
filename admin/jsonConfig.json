@@ -12,8 +12,8 @@
         "_hint": {
           "type": "staticText",
           "text": {
-            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts); je Wechselrichter gibt es danach die Datenpunkte Aktiv und MaxW.",
-            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts); afterwards each inverter has the data points Aktiv and MaxW."
+            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.Meter<x>.TotalActivePower und Power); je Wechselrichter gibt es danach die Datenpunkte Aktiv und MaxW.",
+            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.Meter<x>.TotalActivePower and Power); afterwards each inverter has the data points Aktiv and MaxW."
           },
           "newLine": true,
           "sm": 12
@@ -97,7 +97,7 @@
       },
       "items": {
         "socId": {
-          "type": "text",
+          "type": "objectId",
           "label": {
             "de": "Datenpunkt Akku-SoC (%)",
             "en": "Battery SoC data point (%)"
@@ -105,10 +105,11 @@
           "sm": 12,
           "md": 6,
           "help": {
-            "de": "z. B. growatt-bms.0.SoC",
-            "en": "e.g. growatt-bms.0.SoC"
+            "de": "z. B. growatt-bms.0.bms.SoC",
+            "en": "e.g. growatt-bms.0.bms.SoC"
           },
-          "newLine": true
+          "newLine": true,
+          "types": ["state"]
         },
         "totalBmsLimitW": {
           "type": "number",
@@ -163,7 +164,7 @@
           "newLine": true
         },
         "bmsOnlineId": {
-          "type": "text",
+          "type": "objectId",
           "label": {
             "de": "Datenpunkt BMS online",
             "en": "BMS online data point"
@@ -171,9 +172,10 @@
           "sm": 12,
           "md": 9,
           "help": {
-            "de": "z. B. growatt-bms.0.Online",
-            "en": "e.g. growatt-bms.0.Online"
-          }
+            "de": "z. B. growatt-bms.0.bms.Online",
+            "en": "e.g. growatt-bms.0.bms.Online"
+          },
+          "types": ["state"]
         },
         "checkBmsDischargeLimit": {
           "type": "checkbox",
@@ -186,7 +188,7 @@
           "newLine": true
         },
         "bmsDischargeLimitId": {
-          "type": "text",
+          "type": "objectId",
           "label": {
             "de": "Datenpunkt Entladestrom-Limit (A)",
             "en": "Discharge current limit data point (A)"
@@ -194,9 +196,10 @@
           "sm": 12,
           "md": 6,
           "help": {
-            "de": "z. B. growatt-bms.0.Discharge_Current_Limit",
-            "en": "e.g. growatt-bms.0.Discharge_Current_Limit"
-          }
+            "de": "z. B. growatt-bms.0.bms.Discharge_Current_Limit",
+            "en": "e.g. growatt-bms.0.bms.Discharge_Current_Limit"
+          },
+          "types": ["state"]
         },
         "minBmsDischargeLimitA": {
           "type": "number",
@@ -224,7 +227,7 @@
           "newLine": true
         },
         "bmsProtectionId": {
-          "type": "text",
+          "type": "objectId",
           "label": {
             "de": "Datenpunkt Schutzmeldung",
             "en": "Protection flag data point"
@@ -232,9 +235,10 @@
           "sm": 12,
           "md": 9,
           "help": {
-            "de": "z. B. growatt-bms.0.Any_Protection",
-            "en": "e.g. growatt-bms.0.Any_Protection"
-          }
+            "de": "z. B. growatt-bms.0.bms.Any_Protection",
+            "en": "e.g. growatt-bms.0.bms.Any_Protection"
+          },
+          "types": ["state"]
         }
       }
     },
