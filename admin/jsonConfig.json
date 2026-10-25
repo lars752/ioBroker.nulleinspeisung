@@ -12,7 +12,7 @@
         "_hint": {
           "type": "staticText",
           "text": {
-            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts). Welche WRs aktiv sind und ihre Maximalleistung lässt sich im Tab „WR-Auswahl" einstellen.",
+            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts). Welche WRs aktiv sind und ihre Maximalleistung laesst sich im Tab 'WR-Auswahl' einstellen.",
             "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts). Which inverters are active and their maximum power can be set in the 'Inverter selection' tab."
           },
           "newLine": true,
@@ -537,7 +537,7 @@
         "_wrHint": {
           "type": "staticText",
           "text": {
-            "de": "Hier lassen sich die erkannten Wechselrichter je Zone aktivieren/deaktivieren und ihre Maximalleistung einstellen. Klicke zuerst auf „WR erkennen", dann die Tabelle anpassen und abschließend „Speichern und schließen".",
+            "de": "Hier lassen sich die erkannten Wechselrichter je Zone aktivieren/deaktivieren und ihre Maximalleistung einstellen. Klicke zuerst auf 'WR erkennen', dann die Tabelle anpassen und abschliessend 'Speichern und schliessen'.",
             "en": "Here you can enable/disable the detected inverters per zone and set their maximum power. First click 'Detect inverters', then adjust the table and finally 'Save and close'."
           },
           "newLine": true,
@@ -669,8 +669,8 @@
             "en": "Import JSON from the text field"
           },
           "tooltip": {
-            "de": "Übernimmt die Konfiguration in das Formular; danach „Speichern und schließen“ drücken",
-            "en": "Applies the configuration to the form; then press “Save and close”"
+            "de": "Übernimmt die Konfiguration in das Formular; danach 'Speichern und schließen' drücken",
+            "en": "Applies the configuration to the form; then press 'Save and close'"
           },
           "sm": 12,
           "md": 6
