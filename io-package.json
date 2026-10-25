@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "news": {
+      "1.0.6": {
+        "en": "WR selection moved into Inverters tab; scan button now populates wrConfig table directly",
+        "de": "WR-Auswahl in Tab Wechselrichter verschoben; Scan-Button schreibt Ergebnis direkt in wrConfig-Tabelle"
+      },
       "1.0.5": {
         "en": "Fix: removed objectId and readOnly from table columns (not supported in jsonConfig tables); meterId stays as text field",
         "de": "Fix: objectId und readOnly in Tabellenspalten entfernt (in jsonConfig-Tabellen nicht unterstützt); meterId bleibt Textfeld"

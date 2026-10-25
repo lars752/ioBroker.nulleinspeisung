@@ -12,8 +12,8 @@
         "_hint": {
           "type": "staticText",
           "text": {
-            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts). Welche WRs aktiv sind und ihre Maximalleistung laesst sich im Tab 'WR-Auswahl' einstellen.",
-            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts). Which inverters are active and their maximum power can be set in the 'Inverter selection' tab."
+            "de": "Eine Zone = ein Zaehler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts). Aktiv/Max-W je WR im Tab 'Wechselrichter' einstellen.",
+            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts). Set active/max-W per inverter in the 'Inverters' tab."
           },
           "newLine": true,
           "sm": 12
@@ -309,6 +309,93 @@
           },
           "sm": 12,
           "md": 8
+        },
+        "_wrHint": {
+          "type": "staticText",
+          "text": {
+            "de": "Hier lassen sich die erkannten Wechselrichter je Zone aktivieren/deaktivieren und ihre Maximalleistung einstellen. Zuerst 'WR erkennen' klicken, dann Tabelle anpassen und 'Speichern und schliessen'.",
+            "en": "Here you can enable/disable the detected inverters per zone and set their maximum power. First click 'Detect inverters', then adjust the table and click 'Save and close'."
+          },
+          "newLine": true,
+          "sm": 12
+        },
+        "_scanBtn": {
+          "type": "sendTo",
+          "command": "scanInverters",
+          "jsonData": "{\"zones\": ${JSON.stringify((data.zones || []).map(function(z){return {name: z.name, groupPath: z.groupPath};}))}, \"wrConfig\": ${JSON.stringify(data.wrConfig || [])}}",
+          "variant": "outlined",
+          "label": {
+            "de": "WR erkennen (Tabelle neu laden)",
+            "en": "Detect inverters (reload table)"
+          },
+          "tooltip": {
+            "de": "Scannt die konfigurierten Gruppen nach Wechselrichtern und füllt die Tabelle. Bestehende Aktiv/MaxW-Einstellungen bleiben erhalten.",
+            "en": "Scans the configured groups for inverters and fills the table. Existing enabled/MaxW settings are preserved."
+          },
+          "newLine": true,
+          "sm": 12,
+          "md": 6
+        },
+        "wrConfig": {
+          "type": "table",
+          "label": {
+            "de": "Wechselrichter-Konfiguration",
+            "en": "Inverter configuration"
+          },
+          "newLine": true,
+          "sm": 12,
+          "noDelete": false,
+          "items": [
+            {
+              "type": "text",
+              "attr": "zone",
+              "title": {
+                "de": "Zone",
+                "en": "Zone"
+              },
+              "width": "18%"
+            },
+            {
+              "type": "text",
+              "attr": "name",
+              "title": {
+                "de": "Wechselrichter",
+                "en": "Inverter"
+              },
+              "width": "18%"
+            },
+            {
+              "type": "checkbox",
+              "attr": "enabled",
+              "title": {
+                "de": "Aktiv",
+                "en": "Active"
+              },
+              "width": "10%",
+              "default": true
+            },
+            {
+              "type": "number",
+              "attr": "maxW",
+              "title": {
+                "de": "Max. W (0=Std.)",
+                "en": "Max. W (0=default)"
+              },
+              "width": "18%",
+              "default": 0,
+              "min": 0,
+              "max": 100000
+            },
+            {
+              "type": "text",
+              "attr": "setId",
+              "title": {
+                "de": "Sollwert-Datenpunkt",
+                "en": "Setpoint data point"
+              },
+              "width": "36%"
+            }
+          ]
         }
       }
     },
@@ -524,103 +611,6 @@
           "md": 3,
           "min": 0,
           "max": 100000
-        }
-      }
-    },
-    "wrconfig": {
-      "type": "panel",
-      "label": {
-        "de": "WR-Auswahl",
-        "en": "Inverter selection"
-      },
-      "items": {
-        "_wrHint": {
-          "type": "staticText",
-          "text": {
-            "de": "Hier lassen sich die erkannten Wechselrichter je Zone aktivieren/deaktivieren und ihre Maximalleistung einstellen. Klicke zuerst auf 'WR erkennen', dann die Tabelle anpassen und abschliessend 'Speichern und schliessen'.",
-            "en": "Here you can enable/disable the detected inverters per zone and set their maximum power. First click 'Detect inverters', then adjust the table and finally 'Save and close'."
-          },
-          "newLine": true,
-          "sm": 12
-        },
-        "_scanBtn": {
-          "type": "sendTo",
-          "command": "scanInverters",
-          "jsonData": "{\"zones\": ${JSON.stringify((data.zones || []).map(function(z){return {name: z.name, groupPath: z.groupPath};}))}, \"wrConfig\": ${JSON.stringify(data.wrConfig || [])}}",
-          "useNative": true,
-          "variant": "outlined",
-          "label": {
-            "de": "WR erkennen (Tabelle neu laden)",
-            "en": "Detect inverters (reload table)"
-          },
-          "tooltip": {
-            "de": "Scannt die konfigurierten Gruppen nach Wechselrichtern und füllt die Tabelle. Bestehende Aktiv/MaxW-Einstellungen bleiben erhalten.",
-            "en": "Scans the configured groups for inverters and fills the table. Existing Aktiv/MaxW settings are preserved."
-          },
-          "newLine": true,
-          "sm": 12,
-          "md": 6
-        },
-        "wrConfig": {
-          "type": "table",
-          "label": {
-            "de": "Wechselrichter",
-            "en": "Inverters"
-          },
-          "newLine": true,
-          "sm": 12,
-          "noDelete": false,
-          "items": [
-            {
-              "type": "text",
-              "attr": "zone",
-              "title": {
-                "de": "Zone",
-                "en": "Zone"
-              },
-              "width": "18%"
-            },
-            {
-              "type": "text",
-              "attr": "name",
-              "title": {
-                "de": "Wechselrichter",
-                "en": "Inverter"
-              },
-              "width": "18%"
-            },
-            {
-              "type": "checkbox",
-              "attr": "enabled",
-              "title": {
-                "de": "Aktiv",
-                "en": "Active"
-              },
-              "width": "10%",
-              "default": true
-            },
-            {
-              "type": "number",
-              "attr": "maxW",
-              "title": {
-                "de": "Max. W (0=Std.)",
-                "en": "Max. W (0=default)"
-              },
-              "width": "18%",
-              "default": 0,
-              "min": 0,
-              "max": 100000
-            },
-            {
-              "type": "text",
-              "attr": "setId",
-              "title": {
-                "de": "Sollwert-Datenpunkt",
-                "en": "Setpoint data point"
-              },
-              "width": "36%"
-            }
-          ]
         }
       }
     },
