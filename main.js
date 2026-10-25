@@ -185,6 +185,7 @@ class Nulleinspeisung extends utils.Adapter {
         const guard = (fn) => () => { try { fn(); } catch (e) { this.log.error(`Regelung: ${e.message}`); } };
         this.loopTimer = setInterval(guard(() => this.core.runControlLoop()), cfg.regulatorIntervalMs);
         this.housekeepingTimer = setInterval(guard(() => this.core.housekeeping()), 500);
+        this.latencyStatsTimer = setInterval(guard(() => this.core.logLatencyStats()), 60 * 60 * 1000); // stündlich
         this.rescanTimer = setInterval(() => {
             const job = this.core.configOk ? Promise.all(this.core.zones.map((z) => this.refreshZone(z.name, false))) : this.tryInit();
             job.catch((e) => this.log.error(`Rescan: ${e.message}`));
@@ -232,7 +233,7 @@ class Nulleinspeisung extends utils.Adapter {
     }
 
     onUnload(callback) {
-        for (const t of [this.loopTimer, this.housekeepingTimer, this.rescanTimer]) if (t) clearInterval(t);
+        for (const t of [this.loopTimer, this.housekeepingTimer, this.latencyStatsTimer, this.rescanTimer]) if (t) clearInterval(t);
         const done = () => {
             try { this.setState('info.connection', false, true); } finally { callback(); }
         };

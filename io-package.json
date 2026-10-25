@@ -1,8 +1,16 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "news": {
+      "1.0.2": {
+        "en": "New: per-inverter latency learning – each inverter now has its own response-time model (10 W buckets, EWMA); zone lock duration is the maximum of all per-inverter estimates",
+        "de": "Neu: WR-individuelle Latenzmessung – jeder Wechselrichter hat ein eigenes Ansteuerungszeit-Modell (10-W-Schritte, EWMA); Zonensperre = Maximum aller WR-Schätzungen"
+      },
+      "1.0.1": {
+        "en": "New: adaptive latency learning – inverter response times are measured per 10 W step bucket and used to dynamically adjust the latency lock timeout",
+        "de": "Neu: adaptives Latenz-Lernen – Wechselrichter-Ansteuerungszeiten werden je 10-W-Schritt-Bucket gemessen und der Latenz-Timeout dynamisch angepasst"
+      },
       "1.0.0": {
         "en": "Initial release",
         "de": "Erstveröffentlichung"
