@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
+      "1.0.3": {
+        "en": "Fix: inverter discovery reverted to WR<x>.Power + InvOutputWatts (Shelly groups are meter only)",
+        "de": "Fix: Wechselrichter-Erkennung wieder auf WR<x>.Power + InvOutputWatts (Shelly-Gruppen sind nur Zähler)"
+      },
       "1.0.2": {
         "en": "BMS data point fields now use object picker; inverter discovery updated to Meter<x>.TotalActivePower; default paths updated to bms.* subfolder",
         "de": "BMS-Datenpunktfelder jetzt mit Object-Picker; Wechselrichter-Erkennung auf Meter<x>.TotalActivePower umgestellt; Standard-Pfade auf bms.*-Unterordner aktualisiert"

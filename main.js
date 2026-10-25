@@ -92,15 +92,15 @@ class Nulleinspeisung extends utils.Adapter {
         await this.ensureWatched(want);
     }
 
-    /** Erkennt die Wechselrichter einer Zone (<Gruppe>.Meter<x>.Power mit zugehörigem TotalActivePower) und liest Schalter und MaxW. */
+    /** Erkennt die Wechselrichter einer Zone (<Gruppe>.WR<x>.Power mit zugehörigem InvOutputWatts) und liest Schalter und MaxW. */
     async discoverInverters(zone) {
-        const re = new RegExp(`^${esc(zone.groupPath)}\\.(Meter[^.]*)\\.Power$`);
+        const re = new RegExp(`^${esc(zone.groupPath)}\\.(WR[^.]*)\\.Power$`);
         const objs = (await this.getForeignObjectsAsync(`${zone.groupPath}.*`, 'state')) || {};
         const list = [];
         for (const id of Object.keys(objs)) {
             const m = re.exec(id);
             if (!m) continue;
-            const actualId = `${zone.groupPath}.${m[1]}.TotalActivePower`;
+            const actualId = `${zone.groupPath}.${m[1]}.InvOutputWatts`;
             if (!objs[actualId]) { this.log.warn(`[${zone.name}] ${m[1]}: Istwert ${actualId} fehlt – übersprungen`); continue; }
             list.push({ name: m[1], setId: id, actualId });
         }

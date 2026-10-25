@@ -12,8 +12,8 @@
         "_hint": {
           "type": "staticText",
           "text": {
-            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.Meter<x>.TotalActivePower und Power); je Wechselrichter gibt es danach die Datenpunkte Aktiv und MaxW.",
-            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.Meter<x>.TotalActivePower and Power); afterwards each inverter has the data points Aktiv and MaxW."
+            "de": "Eine Zone = ein Zähler mit seinen Wechselrichtern (z. B. eine Wohnung). Neue Zonen sind zunächst inaktiv. Wechselrichter werden unter der Gruppe automatisch erkannt (<Gruppe>.WR<x>.Power und InvOutputWatts); je Wechselrichter gibt es danach die Datenpunkte Aktiv und MaxW.",
+            "en": "One zone = one meter with its inverters (e.g. one apartment). New zones are inactive at first. Inverters are detected automatically below the group (<group>.WR<x>.Power and InvOutputWatts); afterwards each inverter has the data points Aktiv and MaxW."
           },
           "newLine": true,
           "sm": 12
