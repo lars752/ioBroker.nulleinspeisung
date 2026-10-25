@@ -238,7 +238,7 @@ class Nulleinspeisung extends utils.Adapter {
         if (!obj || !obj.command || !obj.callback) return;
         if (obj.command === 'scanInverters') {
             this._handleScanInverters(obj.message || {})
-                .then((reply) => this.sendTo(obj.from, obj.command, reply, obj.callback))
+                .then((reply) => this.sendTo(obj.from, obj.command, { native: reply }, obj.callback))
                 .catch((e) => this.sendTo(obj.from, obj.command, { error: `Fehler: ${e.message}` }, obj.callback));
             return;
         }

@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "news": {
+      "1.0.7": {
+        "en": "Fix: scanInverters now returns {native: {wrConfig:[...]}} so useNative:true correctly populates the table",
+        "de": "Fix: scanInverters gibt jetzt {native:{wrConfig:[...]}} zurueck, damit useNative:true die Tabelle korrekt befuellt"
+      },
       "1.0.6": {
         "en": "WR selection moved into Inverters tab; scan button now populates wrConfig table directly",
         "de": "WR-Auswahl in Tab Wechselrichter verschoben; Scan-Button schreibt Ergebnis direkt in wrConfig-Tabelle"

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.nulleinspeisung",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Nulleinspeisung für mehrere Zonen an einem Akku (BMS-Budget, SoC-Schutz, Vorsteuerung für getaktete Lasten) über die Sollwerte der Wechselrichter",
   "author": "Lars",
   "license": "MIT",

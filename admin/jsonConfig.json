@@ -323,6 +323,7 @@
           "type": "sendTo",
           "command": "scanInverters",
           "jsonData": "{\"zones\": ${JSON.stringify((data.zones || []).map(function(z){return {name: z.name, groupPath: z.groupPath};}))}, \"wrConfig\": ${JSON.stringify(data.wrConfig || [])}}",
+          "useNative": true,
           "variant": "outlined",
           "label": {
             "de": "WR erkennen (Tabelle neu laden)",
