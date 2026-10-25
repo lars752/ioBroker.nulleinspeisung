@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "news": {
+      "1.0.4": {
+        "en": "Zone meter field now uses object picker; new 'Inverter selection' tab for configuring active inverters and max power per zone without editing runtime data points",
+        "de": "Zähler-Feld der Zone jetzt mit Object-Picker; neuer Tab 'WR-Auswahl' zur Konfiguration aktiver Wechselrichter und Maximalleistung je Zone ohne Laufzeit-Datenpunkte"
+      },
       "1.0.3": {
         "en": "Fix: inverter discovery reverted to WR<x>.Power + InvOutputWatts (Shelly groups are meter only)",
         "de": "Fix: Wechselrichter-Erkennung wieder auf WR<x>.Power + InvOutputWatts (Shelly-Gruppen sind nur Zähler)"

@@ -92,7 +92,7 @@ class Nulleinspeisung extends utils.Adapter {
         await this.ensureWatched(want);
     }
 
-    /** Erkennt die Wechselrichter einer Zone (<Gruppe>.WR<x>.Power mit zugehörigem InvOutputWatts) und liest Schalter und MaxW. */
+    /** Erkennt die Wechselrichter einer Zone (<Gruppe>.WR<x>.Power mit zugehörigem InvOutputWatts) und liest Aktiv/MaxW aus der Config (wrConfig) oder Laufzeit-Datenpunkten. */
     async discoverInverters(zone) {
         const re = new RegExp(`^${esc(zone.groupPath)}\\.(WR[^.]*)\\.Power$`);
         const objs = (await this.getForeignObjectsAsync(`${zone.groupPath}.*`, 'state')) || {};
@@ -105,16 +105,32 @@ class Nulleinspeisung extends utils.Adapter {
             list.push({ name: m[1], setId: id, actualId });
         }
         list.sort(naturalSort);
+        // wrConfig aus Admin-Konfiguration (falls vorhanden)
+        const wrConfigArr = Array.isArray(this.config.wrConfig) ? this.config.wrConfig : [];
         for (const wr of list) {
             const base = `${zone.name}.${wr.name}`;
+            // Config-Eintrag für diesen WR suchen
+            const cfgEntry = wrConfigArr.find((e) => e.zone === zone.name && e.name === wr.name);
             await this.extendObjectAsync(base, { type: 'channel', common: { name: `${zone.name} ${wr.name}` }, native: {} });
             await this.ensureState(`${base}.Aktiv`, { name: `${base}: Wechselrichter an der Regelung beteiligt`, type: 'boolean', role: 'switch', read: true, write: true, def: this.core.cfg.wrSwitchDefault }, this.core.cfg.wrSwitchDefault);
             await this.ensureState(`${base}.MaxW`, { name: `${base}: Maximalleistung (0 = Standard)`, type: 'number', unit: 'W', role: 'level', read: true, write: true, def: 0 }, 0);
-            const sw = await this.getStateAsync(`${base}.Aktiv`);
-            const mx = await this.getStateAsync(`${base}.MaxW`);
-            const maxW = mx && Number(mx.val) > 0 ? Number(mx.val) : this.core.cfg.wrDefaultMaxW;
-            wr.enabled = !(sw && (sw.val === false || sw.val === 'false' || sw.val === 0));
-            wr.maxW = maxW;
+            if (cfgEntry !== undefined) {
+                // Config hat Vorrang vor Laufzeit-Datenpunkt
+                const cfgEnabled = cfgEntry.enabled !== false && cfgEntry.enabled !== 'false' && cfgEntry.enabled !== 0;
+                const cfgMaxW = Number(cfgEntry.maxW) > 0 ? Number(cfgEntry.maxW) : this.core.cfg.wrDefaultMaxW;
+                wr.enabled = cfgEnabled;
+                wr.maxW = cfgMaxW;
+                // Datenpunkte mit Config-Wert synchronisieren
+                await this.setStateAsync(`${base}.Aktiv`, { val: cfgEnabled, ack: true });
+                await this.setStateAsync(`${base}.MaxW`, { val: cfgEntry.maxW > 0 ? Number(cfgEntry.maxW) : 0, ack: true });
+            } else {
+                // Fallback: Laufzeit-Datenpunkte lesen
+                const sw = await this.getStateAsync(`${base}.Aktiv`);
+                const mx = await this.getStateAsync(`${base}.MaxW`);
+                const maxW = mx && Number(mx.val) > 0 ? Number(mx.val) : this.core.cfg.wrDefaultMaxW;
+                wr.enabled = !(sw && (sw.val === false || sw.val === 'false' || sw.val === 0));
+                wr.maxW = maxW;
+            }
         }
         return list;
     }
@@ -217,9 +233,15 @@ class Nulleinspeisung extends utils.Adapter {
         }
     }
 
-    /** Nachrichten der Admin-Oberfläche: JSON-Export und -Import der Konfiguration. */
+    /** Nachrichten der Admin-Oberfläche: JSON-Export/-Import und WR-Scan. */
     onMessage(obj) {
         if (!obj || !obj.command || !obj.callback) return;
+        if (obj.command === 'scanInverters') {
+            this._handleScanInverters(obj.message || {})
+                .then((reply) => this.sendTo(obj.from, obj.command, reply, obj.callback))
+                .catch((e) => this.sendTo(obj.from, obj.command, { error: `Fehler: ${e.message}` }, obj.callback));
+            return;
+        }
         let reply;
         try {
             const msg = obj.message || {};
@@ -230,6 +252,40 @@ class Nulleinspeisung extends utils.Adapter {
             reply = { error: `Fehler: ${e.message}` };
         }
         this.sendTo(obj.from, obj.command, reply, obj.callback);
+    }
+
+    /** Scannt alle Gruppen nach WR<x>.Power und gibt die gefundenen WRs als wrConfig-Array zurück. */
+    async _handleScanInverters(msg) {
+        const zones = Array.isArray(msg.zones) ? msg.zones : [];
+        const existing = Array.isArray(msg.wrConfig) ? msg.wrConfig : [];
+        const result = [];
+        for (const zone of zones) {
+            if (!zone.name || !zone.groupPath) continue;
+            const re = new RegExp(`^${esc(zone.groupPath)}\\.(WR[^.]*)\\.Power$`);
+            let objs = {};
+            try { objs = (await this.getForeignObjectsAsync(`${zone.groupPath}.*`, 'state')) || {}; } catch (e) { /* ignore */ }
+            const found = [];
+            for (const id of Object.keys(objs)) {
+                const m = re.exec(id);
+                if (!m) continue;
+                const actualId = `${zone.groupPath}.${m[1]}.InvOutputWatts`;
+                if (!objs[actualId]) continue;
+                found.push({ name: m[1], setId: id });
+            }
+            found.sort(naturalSort);
+            for (const wr of found) {
+                // Bestehende Einstellungen übernehmen
+                const prev = existing.find((e) => e.zone === zone.name && e.name === wr.name);
+                result.push({
+                    zone: zone.name,
+                    name: wr.name,
+                    enabled: prev ? prev.enabled !== false && prev.enabled !== 'false' && prev.enabled !== 0 : true,
+                    maxW: prev ? (Number(prev.maxW) || 0) : 0,
+                    setId: wr.setId,
+                });
+            }
+        }
+        return { wrConfig: result };
     }
 
     onUnload(callback) {
