@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "news": {
+      "1.0.8": {
+        "en": "Agent API: new setConfig/getConfig message handlers allow the nulleinspeisung-agent adapter to tune parameters at runtime without adapter restart",
+        "de": "Agent-API: neue setConfig/getConfig-Nachrichtenhandler erlauben dem nulleinspeisung-agent-Adapter die Laufzeit-Anpassung von Parametern ohne Adapter-Neustart"
+      },
       "1.0.7": {
         "en": "Fix: scanInverters now returns {native: {wrConfig:[...]}} so useNative:true correctly populates the table",
         "de": "Fix: scanInverters gibt jetzt {native:{wrConfig:[...]}} zurueck, damit useNative:true die Tabelle korrekt befuellt"
