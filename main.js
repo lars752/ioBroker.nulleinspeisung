@@ -1,6 +1,6 @@
 'use strict';
 const utils = require('@iobroker/adapter-core');
-const { normalizeConfig } = require('./lib/model');
+const { normalizeConfig, validateTunable, TUNABLE } = require('./lib/model');
 const { NulleinspeisungCore } = require('./lib/core');
 const configio = require('./lib/configio');
 
@@ -233,6 +233,22 @@ class Nulleinspeisung extends utils.Adapter {
         }
     }
 
+    /** Übernimmt geprüfte Laufzeitwerte in die aktive Kern-Konfiguration. */
+    _applyRuntimeConfig(applied) {
+        const cfg = this.core.cfg;
+        Object.assign(cfg, applied);
+        if ('maxLatencyTimeoutS' in applied) this.core.latencyModel.fallbackMs = cfg.maxLatencyTimeoutS * 1000;
+        if ('regulatorIntervalMs' in applied) {
+            clearInterval(this.loopTimer);
+            this.loopTimer = setInterval(() => {
+                try { this.core.runControlLoop(); } catch (e) { this.log.error(`Regelung: ${e.message}`); }
+            }, cfg.regulatorIntervalMs);
+        }
+        if ('socCutoffPercent' in applied || 'socRestartPercent' in applied) {
+            this.log.info(`Akkuschutz: Abschaltung bei ${cfg.socCutoffPercent} %, Wiederfreigabe ab ${cfg.socRestartPercent} %`);
+        }
+    }
+
     /** Nachrichten der Admin-Oberfläche: JSON-Export/-Import und WR-Scan. */
     onMessage(obj) {
         if (!obj || !obj.command || !obj.callback) return;
@@ -242,48 +258,18 @@ class Nulleinspeisung extends utils.Adapter {
                 .catch((e) => this.sendTo(obj.from, obj.command, { error: `Fehler: ${e.message}` }, obj.callback));
             return;
         }
-        // Agent-API: Parameter zur Laufzeit lesen / schreiben (kein Neustart nötig)
+        // Agent-API: Parameter zur Laufzeit lesen / schreiben (kein Neustart nötig, nicht persistent)
         if (obj.command === 'getConfig') {
-            const cfg = Object.assign({}, this.config);
-            // Kein API-Key o.ä. zurückgeben — nur Tuning-relevante Felder
+            const src = this.core ? this.core.cfg : this.config;
             const safe = {};
-            for (const key of [
-                'deadBandWatts', 'regulatorIntervalMs', 'maxLatencyTimeoutS', 'latencyToleranceW',
-                'feedForwardEnabled', 'peakDetectionThresholdW', 'estimatedDutyCycle',
-                'tactPauseTimeoutMs', 'dryRun',
-            ]) {
-                if (key in cfg) safe[key] = cfg[key];
-            }
+            for (const key of TUNABLE) if (key in src) safe[key] = src[key];
             this.sendTo(obj.from, obj.command, safe, obj.callback);
             return;
         }
-
         if (obj.command === 'setConfig') {
-            const changes = obj.message || {};
-            const allowed = new Set([
-                'deadBandWatts', 'regulatorIntervalMs', 'maxLatencyTimeoutS', 'latencyToleranceW',
-                'feedForwardEnabled', 'peakDetectionThresholdW', 'estimatedDutyCycle',
-                'tactPauseTimeoutMs',
-            ]);
-            const applied = {};
-            const rejected = {};
-            for (const [k, v] of Object.entries(changes)) {
-                if (!allowed.has(k)) { rejected[k] = 'nicht erlaubt'; continue; }
-                this.config[k] = v;
-                if (this.core && k in this.core) this.core[k] = v;
-                // Kernregler direkt aktualisieren ohne Neustart
-                if (this.core) {
-                    if (k === 'deadBandWatts')          this.core.deadBandWatts = Number(v);
-                    if (k === 'regulatorIntervalMs')     { clearInterval(this.loopTimer); this.loopTimer = setInterval(() => this.core.runAllZones(), Number(v)); }
-                    if (k === 'maxLatencyTimeoutS')      this.core.maxLatencyTimeoutS = Number(v);
-                    if (k === 'latencyToleranceW')       this.core.latencyToleranceW = Number(v);
-                    if (k === 'feedForwardEnabled')      this.core.feedForwardEnabled = Boolean(v);
-                    if (k === 'peakDetectionThresholdW') this.core.peakDetectionThresholdW = Number(v);
-                    if (k === 'estimatedDutyCycle')      this.core.estimatedDutyCycle = Number(v);
-                    if (k === 'tactPauseTimeoutMs')      this.core.tactPauseTimeoutMs = Number(v);
-                }
-                applied[k] = v;
-            }
+            if (!this.core) { this.sendTo(obj.from, obj.command, { error: 'Regelung noch nicht gestartet' }, obj.callback); return; }
+            const { applied, rejected } = validateTunable(obj.message || {}, this.core.cfg);
+            this._applyRuntimeConfig(applied);
             this.log.info(`[setConfig] Angepasst: ${JSON.stringify(applied)}${Object.keys(rejected).length ? ` | Abgelehnt: ${JSON.stringify(rejected)}` : ''}`);
             this.sendTo(obj.from, obj.command, { applied, rejected }, obj.callback);
             return;

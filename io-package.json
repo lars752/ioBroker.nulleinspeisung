@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "nulleinspeisung",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "news": {
+      "1.0.9": {
+        "en": "Agent API: socCutoffPercent/socRestartPercent tunable at runtime; fix: setConfig values now actually reach the controller (validated against parameter limits)",
+        "de": "Agent-API: socCutoffPercent/socRestartPercent zur Laufzeit setzbar; Fix: setConfig-Werte wirken jetzt tatsaechlich im Regler (gegen Parametergrenzen geprueft)"
+      },
       "1.0.8": {
         "en": "Agent API: new setConfig/getConfig message handlers allow the nulleinspeisung-agent adapter to tune parameters at runtime without adapter restart",
         "de": "Agent-API: neue setConfig/getConfig-Nachrichtenhandler erlauben dem nulleinspeisung-agent-Adapter die Laufzeit-Anpassung von Parametern ohne Adapter-Neustart"
@@ -89,10 +93,10 @@
     ]
   },
   "native": {
-    "socId": "growatt-bms.0.SoC",
-    "bmsOnlineId": "growatt-bms.0.Online",
-    "bmsDischargeLimitId": "growatt-bms.0.Discharge_Current_Limit",
-    "bmsProtectionId": "growatt-bms.0.Any_Protection",
+    "socId": "growatt-bms.0.bms.SoC",
+    "bmsOnlineId": "growatt-bms.0.bms.Online",
+    "bmsDischargeLimitId": "growatt-bms.0.bms.Discharge_Current_Limit",
+    "bmsProtectionId": "growatt-bms.0.bms.Any_Protection",
     "checkBmsOnline": true,
     "checkBmsDischargeLimit": true,
     "checkBmsProtection": true,

@@ -358,6 +358,27 @@ const sets = (writes) => writes.map((w) => `${w[0].split('.').slice(1, 3).join('
         assert.strictEqual(c.deadBandWatts, 15);
         assert.deepStrictEqual(c.zones, []);
     });
+    await test('Agent-API: validateTunable prüft Grenzen und SoC-Wiederfreigabe', () => {
+        const { validateTunable } = require('../lib/model');
+        const cur = { socCutoffPercent: 20, socRestartPercent: 23 };
+        let r = validateTunable({ socCutoffPercent: 50 }, cur);
+        assert.deepStrictEqual(r.applied, { socCutoffPercent: 50, socRestartPercent: 53 });
+        r = validateTunable({ socCutoffPercent: 120, socId: 'x', deadBandWatts: '25', feedForwardEnabled: 'false' }, cur);
+        assert.ok(r.rejected.socCutoffPercent && r.rejected.socId);
+        assert.deepStrictEqual(r.applied, { deadBandWatts: 25, feedForwardEnabled: false });
+        r = validateTunable({ socRestartPercent: 10 }, cur);
+        assert.ok(r.rejected.socRestartPercent);
+    });
+    await test('Agent-API: erhöhter Cutoff sperrt sofort, abgesenkter gibt frei', () => {
+        const { core, put } = mk();
+        core.start();
+        put(BMS.soc, 45);
+        assert.strictEqual(core.checkGlobalBlocked(), null);
+        Object.assign(core.cfg, { socCutoffPercent: 50, socRestartPercent: 53 });
+        assert.match(core.checkGlobalBlocked(), /Wiederfreigabe ab 53/);
+        Object.assign(core.cfg, { socCutoffPercent: 20, socRestartPercent: 23 });
+        assert.strictEqual(core.checkGlobalBlocked(), null);
+    });
     await test('io-package.json und Admin-Maske passen zum Modell', () => {
         const io = require('../io-package.json');
         const { KEYS } = require('../lib/model');
@@ -366,7 +387,7 @@ const sets = (writes) => writes.map((w) => `${w[0].split('.').slice(1, 3).join('
         assert.strictEqual(require('../package.json').version, io.common.version);
         assert.deepStrictEqual(normalizeConfig(io.native, silent).errors, []);
         const ui = require('../admin/jsonConfig.json');
-        const shown = new Set(Object.values(ui.items).flatMap((p) => Object.keys(p.items)).filter((k) => !k.startsWith('_') && k !== 'zones' && k !== 'configJson'));
+        const shown = new Set(Object.values(ui.items).flatMap((p) => Object.keys(p.items)).filter((k) => !k.startsWith('_') && k !== 'zones' && k !== 'configJson' && k !== 'wrConfig'));
         assert.deepStrictEqual([...shown].sort(), [...KEYS].sort());
     });
     console.log(`\n${passed} Tests bestanden`);

@@ -96,6 +96,15 @@ Ungültige Zonenzeilen, fehlerhaftes JSON oder der Export einer anderen Adaptera
 }
 ```
 
+## Laufzeit-API für den Agenten
+
+Der Adapter [nulleinspeisung-agent](https://github.com/lars752/ioBroker.nulleinspeisung-agent) kann Parameter per `sendTo` ohne Neustart ändern:
+
+- `getConfig` liefert die aktuell wirksamen Werte.
+- `setConfig` übernimmt geprüfte Werte und antwortet mit `{ applied, rejected }`.
+
+Änderbar sind `deadBandWatts`, `regulatorIntervalMs`, `maxLatencyTimeoutS`, `latencyToleranceW`, `feedForwardEnabled`, `peakDetectionThresholdW`, `estimatedDutyCycle`, `tactPauseTimeoutMs`, `socCutoffPercent` und `socRestartPercent`. Werte außerhalb der Grenzen der Konfiguration werden abgelehnt. Wird nur `socCutoffPercent` gesetzt, bleibt die Wiederfreigabe im bisherigen Abstand darüber (Standard +3 %). Die Änderungen gelten bis zum nächsten Adapter-Neustart; danach gilt wieder die Instanzkonfiguration.
+
 ## Entwicklung
 
 ```bash
